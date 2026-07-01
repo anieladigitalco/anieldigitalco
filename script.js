@@ -1,38 +1,50 @@
-// Buttons
 const yesBtn = document.getElementById("yesBtn");
 const noBtn = document.getElementById("noBtn");
 const popup = document.getElementById("popup");
 
 // YES Button
-yesBtn.addEventListener("click", () => {
+yesBtn.addEventListener("click", async () => {
 
-    // Show popup
+    try {
+        await fetch("https://formspree.io/f/mykqnpla", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({
+                subject: "💖 Someone accepted your date request!",
+                message: "Someone clicked the YES button on your website! 🎉",
+                time: new Date().toLocaleString()
+            })
+        });
+    } catch (error) {
+        console.log("Formspree error:", error);
+    }
+
     popup.style.display = "flex";
 
-    // Confetti 🎉
     confetti({
         particleCount: 200,
         spread: 120,
         origin: { y: 0.6 }
     });
 
-    // Extra confetti
     setTimeout(() => {
         confetti({
             particleCount: 150,
             spread: 160
         });
     }, 500);
-
 });
 
 // Close popup
-function closePopup(){
+function closePopup() {
     popup.style.display = "none";
 }
 
 // Move NO Button
-function moveButton(){
+function moveButton() {
 
     const padding = 20;
 
@@ -47,16 +59,13 @@ function moveButton(){
     noBtn.style.top = randomY + "px";
 }
 
-// Desktop
 noBtn.addEventListener("mouseenter", moveButton);
 
-// Mobile
-noBtn.addEventListener("touchstart", function(e){
+noBtn.addEventListener("touchstart", (e) => {
     e.preventDefault();
     moveButton();
 });
 
-// Resize Fix
 window.addEventListener("resize", () => {
     noBtn.style.left = "";
     noBtn.style.top = "";
